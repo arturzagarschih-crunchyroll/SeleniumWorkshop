@@ -43,4 +43,13 @@ class DemoPage(driver: WebDriver) {
 		println(captchaResult)
 		return captchaResult
 	}
+
+	fun submitForm() {
+		firstName.sendKeys("MyTestName")
+		lastName.sendKeys("MyLastTestName")
+		companyName.sendKeys("Company")
+		email.sendKeys("testemail@email.com")
+		captchaInput.sendKeys(calculateCaptcha().toString())
+		submitButton.click()
+	}
 }

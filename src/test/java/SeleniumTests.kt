@@ -28,18 +28,14 @@ class SeleniumTests {
 		demoPage.captchaInput.sendKeys(demoPage.calculateCaptcha().toString())
 		demoPage.submitButton.click()
 		Assert.assertTrue("Completed sign is present", demoPage.completedCheckmark.size > 0)
+		//demoPage.completedCheckmark[0].isDisplayed()
 	}
 
 	@Test
 	fun directFormSubmission() {
 		driver.get("https://phptravels.com/demo")
 		val demoPage = DemoPage(driver)
-		demoPage.firstName.sendKeys("MyTestName")
-		demoPage.lastName.sendKeys("MyLastTestName")
-		demoPage.companyName.sendKeys("Company")
-		demoPage.email.sendKeys("testemail@email.com")
-		demoPage.captchaInput.sendKeys(demoPage.calculateCaptcha().toString())
-		demoPage.submitButton.click()
+		demoPage.submitForm()
 		Assert.assertTrue("Completed sign is present", demoPage.completedCheckmark.size > 0)
 	}
 
