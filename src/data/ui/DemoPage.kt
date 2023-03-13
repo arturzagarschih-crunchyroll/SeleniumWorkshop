@@ -17,6 +17,8 @@ class DemoPage(driver: WebDriver) {
 
 	val captchaInput = driver.findElement(By.id("number"))
 
+	val completedCheckmark = driver.findElements(By.xpath("//div[@class='completed']"))
+
 	fun calculateCaptcha(): Int {
 		val captchaValue = captchaInput.text
 		//val regex = "(\\d+)\\s+([+\\-*/]+)\\s+(\\d+)".toRegex()

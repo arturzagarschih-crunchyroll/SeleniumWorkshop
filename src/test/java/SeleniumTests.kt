@@ -1,7 +1,6 @@
 import org.junit.After
 import org.junit.Assert
 import org.junit.Test
-import org.openqa.selenium.By
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 
@@ -28,7 +27,20 @@ class SeleniumTests {
 		alert.accept()
 		demoPage.captchaInput.sendKeys(demoPage.calculateCaptcha().toString())
 		demoPage.submitButton.click()
-		Assert.assertTrue("Completed sign is present", driver.findElements(By.xpath("//div[@class='completed']")).size > 0)
+		Assert.assertTrue("Completed sign is present", demoPage.completedCheckmark.size > 0)
+	}
+
+	@Test
+	fun directFormSubmission() {
+		driver.get("https://phptravels.com/demo")
+		val demoPage = DemoPage(driver)
+		demoPage.firstName.sendKeys("MyTestName")
+		demoPage.lastName.sendKeys("MyLastTestName")
+		demoPage.companyName.sendKeys("Company")
+		demoPage.email.sendKeys("testemail@email.com")
+		demoPage.captchaInput.sendKeys(demoPage.calculateCaptcha().toString())
+		demoPage.submitButton.click()
+		Assert.assertTrue("Completed sign is present", demoPage.completedCheckmark.size > 0)
 	}
 
 	@After
