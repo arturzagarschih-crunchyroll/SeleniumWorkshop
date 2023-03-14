@@ -1,3 +1,6 @@
 .idea
 target
 SeleniumTraining.iml
+src/.DS_Store
+src/test/.DS_Store
+screenshot.png

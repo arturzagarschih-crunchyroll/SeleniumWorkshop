@@ -1,17 +1,22 @@
+import java.io.File
+import java.nio.file.Files.write
 import org.junit.After
 import org.junit.Assert
 import org.junit.Test
+import org.openqa.selenium.OutputType.BYTES
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
+
 
 class SeleniumTests {
 
 	val options = ChromeOptions().addArguments("--remote-allow-origins=*")
 	private val driver = ChromeDriver(options)
 
+
 	@Test
 	fun test() {
-		driver.get("https://phptravels.com/demo")
+		driver.navigate().to("https://phptravels.com/demo")
 		val demoPage = DemoPage(driver)
 		demoPage.firstName.sendKeys("MyTestName")
 		demoPage.lastName.sendKeys("MyLastTestName")
@@ -28,12 +33,14 @@ class SeleniumTests {
 		demoPage.captchaInput.sendKeys(demoPage.calculateCaptcha().toString())
 		demoPage.submitButton.click()
 		Assert.assertTrue("Completed sign is present", demoPage.completedCheckmark.size > 0)
-		//demoPage.completedCheckmark[0].isDisplayed()
+		val file = driver.getScreenshotAs(BYTES)
+		val screenshotFile = File("screenshot.png")
+		write(screenshotFile.toPath(), file)
 	}
 
 	@Test
 	fun directFormSubmission() {
-		driver.get("https://phptravels.com/demo")
+		driver.navigate().to("https://phptravels.com/demo")
 		val demoPage = DemoPage(driver)
 		demoPage.submitForm()
 		Assert.assertTrue("Completed sign is present", demoPage.completedCheckmark.size > 0)
