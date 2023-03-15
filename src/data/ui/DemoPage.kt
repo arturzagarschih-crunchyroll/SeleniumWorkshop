@@ -1,8 +1,13 @@
+import java.time.Duration
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.interactions.Actions
+import org.openqa.selenium.support.ui.ExpectedConditions
+import org.openqa.selenium.support.ui.WebDriverWait
 
 class DemoPage(private val driver: WebDriver) {
+
+	private val regex = "(?<val1>\\d+)\\s+(?<sign>[+\\-*/]+)\\s+(?<val2>\\d+)".toRegex()
 
 	val firstName by lazy { driver.findElement(By.name("first_name")) }
 
@@ -14,7 +19,8 @@ class DemoPage(private val driver: WebDriver) {
 
 	val submitButton = driver.findElement(By.id("demo"))
 
-	val captcha = driver.findElement(By.xpath("//div[contains(@class, 'row fcr')]//h2"))
+	private val CAPTCHA_PATH = By.xpath("//div[contains(@class, 'row fcr')]//h2")
+	val captcha = driver.findElement(CAPTCHA_PATH)
 
 	val captchaInput = driver.findElement(By.id("number"))
 
@@ -24,7 +30,6 @@ class DemoPage(private val driver: WebDriver) {
 		val captchaValue = captcha.text
 
 		println(captcha.tagName)
-		val regex = "(?<val1>\\d+)\\s+(?<sign>[+\\-*/]+)\\s+(?<val2>\\d+)".toRegex()
 		val match = regex.find(captcha.text)!!
 		val val1 = match.groups["val1"]!!.value.toInt()
 		val val2 = match.groups["val2"]!!.value.toInt()
@@ -56,9 +61,10 @@ class DemoPage(private val driver: WebDriver) {
 	}
 
 	fun submitForm2() {
-		val ac = Actions(driver);
-		//expected conditions
-		val captcha = calculateCaptcha().toString()
+		val ac = Actions(driver)
+		WebDriverWait(driver, Duration.ofSeconds(10))
+			.until(ExpectedConditions.textMatches(CAPTCHA_PATH, regex.toPattern()))
+		val capcha = calculateCaptcha().toString()
 		ac
 			.moveToElement(firstName).sendKeys("MyTestName")
 			.moveToElement(lastName).sendKeys("MyLastTestName")
