@@ -52,19 +52,10 @@ class DemoPage(private val driver: WebDriver) {
 	}
 
 	fun submitForm() {
-		firstName.sendKeys("MyTestName")
-		lastName.sendKeys("MyLastTestName")
-		companyName.sendKeys("Company")
-		email.sendKeys("testemail@email.com")
-		captchaInput.sendKeys(calculateCaptcha().toString())
-		submitButton.click()
-	}
-
-	fun submitForm2() {
 		val ac = Actions(driver)
 		WebDriverWait(driver, Duration.ofSeconds(10))
 			.until(ExpectedConditions.textMatches(CAPTCHA_PATH, regex.toPattern()))
-		val capcha = calculateCaptcha().toString()
+		val captcha = calculateCaptcha().toString()
 		ac
 			.moveToElement(firstName).sendKeys("MyTestName")
 			.moveToElement(lastName).sendKeys("MyLastTestName")

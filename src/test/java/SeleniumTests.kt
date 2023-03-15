@@ -54,7 +54,7 @@ class SeleniumTests {
 	fun directFormSubmission() {
 		driver.navigate().to("https://phptravels.com/demo")
 		val demoPage = DemoPage(driver)
-		demoPage.submitForm2()
+		demoPage.submitForm()
 		Assert.assertTrue("Completed sign is present", demoPage.completedCheckmark.size > 0)
 	}
 
