@@ -1,9 +1,10 @@
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.interactions.Actions
 
-class DemoPage(driver: WebDriver) {
+class DemoPage(private val driver: WebDriver) {
 
-	val firstName = driver.findElement(By.name("first_name"))
+	val firstName by lazy { driver.findElement(By.name("first_name")) }
 
 	val lastName = driver.findElement(By.name("last_name"))
 
@@ -20,8 +21,9 @@ class DemoPage(driver: WebDriver) {
 	val completedCheckmark = driver.findElements(By.xpath("//div[@class='completed']"))
 
 	fun calculateCaptcha(): Int {
-		val captchaValue = captchaInput.text
-		//val regex = "(\\d+)\\s+([+\\-*/]+)\\s+(\\d+)".toRegex()
+		val captchaValue = captcha.text
+
+		println(captcha.tagName)
 		val regex = "(?<val1>\\d+)\\s+(?<sign>[+\\-*/]+)\\s+(?<val2>\\d+)".toRegex()
 		val match = regex.find(captcha.text)!!
 		val val1 = match.groups["val1"]!!.value.toInt()
@@ -51,5 +53,18 @@ class DemoPage(driver: WebDriver) {
 		email.sendKeys("testemail@email.com")
 		captchaInput.sendKeys(calculateCaptcha().toString())
 		submitButton.click()
+	}
+
+	fun submitForm2() {
+		val ac = Actions(driver);
+		//expected conditions
+		val captcha = calculateCaptcha().toString()
+		ac
+			.moveToElement(firstName).sendKeys("MyTestName")
+			.moveToElement(lastName).sendKeys("MyLastTestName")
+			.moveToElement(companyName).sendKeys("Company")
+			.moveToElement(email).sendKeys("testemail@email.com")
+			.moveToElement(captchaInput).sendKeys(captcha)
+			.moveToElement(submitButton).click().build().perform()
 	}
 }

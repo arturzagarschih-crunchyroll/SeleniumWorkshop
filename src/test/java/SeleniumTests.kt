@@ -1,7 +1,10 @@
 import java.io.File
+import java.lang.Thread.sleep
 import java.nio.file.Files.write
+import java.util.concurrent.TimeUnit
 import org.junit.After
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 import org.openqa.selenium.OutputType.BYTES
 import org.openqa.selenium.chrome.ChromeDriver
@@ -12,6 +15,12 @@ class SeleniumTests {
 
 	val options = ChromeOptions().addArguments("--remote-allow-origins=*")
 	private val driver = ChromeDriver(options)
+
+	@Before
+	fun setUp(){
+		//driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
+	}
+
 
 
 	@Test
@@ -42,9 +51,10 @@ class SeleniumTests {
 	fun directFormSubmission() {
 		driver.navigate().to("https://phptravels.com/demo")
 		val demoPage = DemoPage(driver)
-		demoPage.submitForm()
+		demoPage.submitForm2()
 		Assert.assertTrue("Completed sign is present", demoPage.completedCheckmark.size > 0)
 	}
+
 
 	@After
 	fun tearDown() {
