@@ -7,6 +7,8 @@ import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.openqa.selenium.By
+import org.openqa.selenium.Keys
 import org.openqa.selenium.OutputType.BYTES
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
@@ -21,10 +23,8 @@ class SeleniumTests {
 
 	@Before
 	fun setUp(){
-		//driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
 	}
-
-
 
 	@Test
 	fun test() {
@@ -45,6 +45,17 @@ class SeleniumTests {
 		demoPage.captchaInput.sendKeys(demoPage.calculateCaptcha().toString())
 		demoPage.submitButton.click()
 		Assert.assertTrue("Completed sign is present", demoPage.completedCheckmark.size > 0)
+		driver.findElement(By.cssSelector("body")).sendKeys(Keys.chord(Keys.COMMAND, "A"))
+		//Example with builder
+		//StringBuilder keys = new StringBuilder();
+		//  keys.append(Keys.COMMAND);
+		//  keys.append("A");
+		//  .sendKeys(Keys.chord(keys.toString()));
+
+		//Example with Actions
+		// Actions action = new Actions(driver);
+		//action.sendKeys(Keys.chord(Keys.SHIFT),
+		//      Keys.chord(Keys.TAB)).build().perform()
 		val file = driver.getScreenshotAs(BYTES)
 		val screenshotFile = File("screenshot.png")
 		write(screenshotFile.toPath(), file)

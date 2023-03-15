@@ -9,6 +9,8 @@ class DemoPage(private val driver: WebDriver) {
 
 	private val regex = "(?<val1>\\d+)\\s+(?<sign>[+\\-*/]+)\\s+(?<val2>\\d+)".toRegex()
 
+	val login by lazy { driver.findElement(By.cssSelector("[data-name='login']")) }
+
 	val firstName by lazy { driver.findElement(By.name("first_name")) }
 
 	val lastName = driver.findElement(By.name("last_name"))
