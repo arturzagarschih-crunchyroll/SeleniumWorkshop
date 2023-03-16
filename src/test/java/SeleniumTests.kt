@@ -1,4 +1,5 @@
 import java.io.File
+import java.net.URL
 import java.nio.file.Files.write
 import java.util.concurrent.TimeUnit
 import org.junit.After
@@ -9,23 +10,35 @@ import org.openqa.selenium.Alert
 import org.openqa.selenium.By
 import org.openqa.selenium.Keys
 import org.openqa.selenium.OutputType.BYTES
+import org.openqa.selenium.Platform
 import org.openqa.selenium.TakesScreenshot
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.support.events.EventFiringDecorator
 import org.openqa.selenium.support.events.WebDriverListener
 
 
 class SeleniumTests {
 
-	val options = ChromeOptions().addArguments("--remote-allow-origins=*")
+	val options = optionsSetUp()
+	fun optionsSetUp(): ChromeOptions{
+		val options = ChromeOptions().addArguments("--remote-allow-origins=*")
+		options.setCapability("browserName", "chrome1")
+		options.setCapability("platformName", "MAC")
+		options.setCapability("se:name", "My simple test")
+		options.setCapability("se:sampleMetadata", "Sample metadata value")
+		options.setCapabillssity("test", "value")
+		options.setPlatformName("MAC")
+		return options
+	}
+
 	val listener = object : WebDriverListener {
 		override fun beforeAccept(alert: Alert) {
 			println("Text of accepted alert is: ${alert.text}")
 		}
 	}
-	val driver = EventFiringDecorator<WebDriver>(listener).decorate(ChromeDriver(options))
+	val driver = EventFiringDecorator<WebDriver>(listener).decorate(RemoteWebDriver(URL("http://192.168.0.165:4444")!!, options))
 
 	@Before
 	fun setUp() {
