@@ -1,7 +1,5 @@
 import java.io.File
-import java.lang.Thread.sleep
 import java.nio.file.Files.write
-import java.time.Duration
 import java.util.concurrent.TimeUnit
 import org.junit.After
 import org.junit.Assert
@@ -12,8 +10,6 @@ import org.openqa.selenium.Keys
 import org.openqa.selenium.OutputType.BYTES
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
-import org.openqa.selenium.support.ui.ExpectedConditions
-import org.openqa.selenium.support.ui.WebDriverWait
 
 
 class SeleniumTests {
@@ -22,7 +18,7 @@ class SeleniumTests {
 	private val driver = ChromeDriver(options)
 
 	@Before
-	fun setUp(){
+	fun setUp() {
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
 	}
 
@@ -46,16 +42,6 @@ class SeleniumTests {
 		demoPage.submitButton.click()
 		Assert.assertTrue("Completed sign is present", demoPage.completedCheckmark.size > 0)
 		driver.findElement(By.cssSelector("body")).sendKeys(Keys.chord(Keys.COMMAND, "A"))
-		//Example with builder
-		//StringBuilder keys = new StringBuilder();
-		//  keys.append(Keys.COMMAND);
-		//  keys.append("A");
-		//  .sendKeys(Keys.chord(keys.toString()));
-
-		//Example with Actions
-		// Actions action = new Actions(driver);
-		//action.sendKeys(Keys.chord(Keys.SHIFT),
-		//      Keys.chord(Keys.TAB)).build().perform()
 		val file = driver.getScreenshotAs(BYTES)
 		val screenshotFile = File("screenshot.png")
 		write(screenshotFile.toPath(), file)
