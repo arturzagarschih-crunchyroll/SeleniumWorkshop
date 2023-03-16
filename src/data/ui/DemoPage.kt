@@ -1,5 +1,6 @@
 import java.time.Duration
 import org.openqa.selenium.By
+import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.ExpectedConditions
@@ -28,29 +29,10 @@ class DemoPage(private val driver: WebDriver) {
 
 	val completedCheckmark = driver.findElements(By.xpath("//div[@class='completed']"))
 
-	fun calculateCaptcha(): Int {
-		val captchaValue = captcha.text
-
-		println(captcha.tagName)
-		val match = regex.find(captcha.text)!!
-		val val1 = match.groups["val1"]!!.value.toInt()
-		val val2 = match.groups["val2"]!!.value.toInt()
-		val sign = match.groups["sign"]!!.value
-
-		println(val1)
-		println(val2)
-		println(sign)
-		val captchaResult = when (sign) {
-			"+" -> val1 + val2
-			"-" -> val1 - val2
-			"*" -> val1 * val2
-			"/" -> val1 / val2
-			else -> {
-				throw NumberFormatException()
-			}
-		}
-		println(captchaResult)
-		return captchaResult
+	fun calculateCaptcha() {
+		val expression = captcha.text.replace("=", "")
+		val result = (driver as JavascriptExecutor).executeScript("return eval(arguments[0])", expression)
+		println(result)
 	}
 
 	fun submitForm() {
