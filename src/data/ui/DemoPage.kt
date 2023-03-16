@@ -22,8 +22,8 @@ class DemoPage(private val driver: WebDriver) {
 
 	val submitButton = driver.findElement(By.id("demo"))
 
-	private val CAPTCHA_PATH = By.xpath("//div[contains(@class, 'row fcr')]//h2")
-	val captcha = driver.findElement(CAPTCHA_PATH)
+	private val CAPTCHA_BY = By.cssSelector("div[class*='row fcr'] h2")
+	val captcha = driver.findElement(CAPTCHA_BY)
 
 	val captchaInput = driver.findElement(By.id("number"))
 
@@ -33,12 +33,14 @@ class DemoPage(private val driver: WebDriver) {
 		val expression = captcha.text.replace("=", "")
 		val result = (driver as JavascriptExecutor).executeScript("return eval(arguments[0])", expression)
 		println(result)
+		//or
+		//(driver as JavascriptExecutor).executeScript("eval(document.querySelector('div[class*='row fcr'] h2').textContent.replace(\"=\", \"\"))")
 	}
 
 	fun submitForm() {
 		val ac = Actions(driver)
 		WebDriverWait(driver, Duration.ofSeconds(10))
-			.until(ExpectedConditions.textMatches(CAPTCHA_PATH, regex.toPattern()))
+			.until(ExpectedConditions.textMatches(CAPTCHA_BY, regex.toPattern()))
 		val captcha = calculateCaptcha().toString()
 		ac
 			.moveToElement(firstName).sendKeys("MyTestName")
