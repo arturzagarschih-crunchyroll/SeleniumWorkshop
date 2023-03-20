@@ -1,4 +1,5 @@
 import java.io.File
+import java.lang.Thread.sleep
 import java.net.URL
 import java.nio.file.Files.write
 import java.util.concurrent.TimeUnit
@@ -10,9 +11,9 @@ import org.openqa.selenium.Alert
 import org.openqa.selenium.By
 import org.openqa.selenium.Keys
 import org.openqa.selenium.OutputType.BYTES
-import org.openqa.selenium.Platform
 import org.openqa.selenium.TakesScreenshot
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.support.events.EventFiringDecorator
@@ -21,24 +22,38 @@ import org.openqa.selenium.support.events.WebDriverListener
 
 class SeleniumTests {
 
-	val options = optionsSetUp()
-	fun optionsSetUp(): ChromeOptions{
+	val options = optionSetUp()
+//	fun optionsSetUp(): ChromeOptions {
+//		val options = ChromeOptions().addArguments("--remote-allow-origins=*")
+//		options.setCapability("browserName", "chrome")
+//		//options.setCapability("platformName", "MAC")
+//		options.setCapability("se:name", "My simple test")
+//		options.setCapability("se:sampleMetadata", "Sample metadata value")
+//		options.setPlatformName("MAC")
+//		return options
+//	}
+
+	fun optionSetUp(): ChromeOptions {
 		val options = ChromeOptions().addArguments("--remote-allow-origins=*")
-		options.setCapability("browserName", "chrome1")
-		options.setCapability("platformName", "MAC")
-		options.setCapability("se:name", "My simple test")
-		options.setCapability("se:sampleMetadata", "Sample metadata value")
-		options.setCapabillssity("test", "value")
-		options.setPlatformName("MAC")
+		options.setCapability("browserName", "chrome")
+		options.setCapability("browserVersion", "110.0")
 		return options
 	}
+
+
+//	val chromeOptions = ChromeOptions().apply {
+//		addArguments("--remote-allow-origins=*")
+//		setCapability("pageLoadStrategy", "eager")
+//	}
 
 	val listener = object : WebDriverListener {
 		override fun beforeAccept(alert: Alert) {
 			println("Text of accepted alert is: ${alert.text}")
 		}
 	}
-	val driver = EventFiringDecorator<WebDriver>(listener).decorate(RemoteWebDriver(URL("http://192.168.0.165:4444")!!, options))
+
+	val driver = EventFiringDecorator<WebDriver>(listener).decorate(RemoteWebDriver(URL("http://localhost:4444/wd/hub")!!, options))
+	//val driver = EventFiringDecorator<WebDriver>(listener).decorate(ChromeDriver(chromeOptions))
 
 	@Before
 	fun setUp() {
@@ -76,6 +91,14 @@ class SeleniumTests {
 		val demoPage = DemoPage(driver)
 		demoPage.submitForm()
 		Assert.assertTrue("Completed sign is present", demoPage.completedCheckmark.size > 0)
+	}
+
+	@Test
+	fun tableInteraction() {
+		driver.navigate().to("https://www.techlistic.com/p/demo-selenium-practice.html")
+		val tablePage = TablePage(driver)
+		Assert.assertTrue("Taipei" == tablePage.dynamicElement("Taipei 101", "City")?.text)
+		sleep(1000)
 	}
 
 	@After
