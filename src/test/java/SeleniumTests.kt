@@ -21,11 +21,28 @@ import org.openqa.selenium.support.events.WebDriverListener
 
 class SeleniumTests {
 
-	val username = "Your user name"
-	val accessToken = "Your password"
+	val username = System.getenv("LT_USERNAME")
+	val accessToken = System.getenv("LT_ACCESS_KEY")
 	val host = URL("https://${username}:${accessToken}@hub.lambdatest.com/wd/hub")!!
 
-	val options = optionSetUp()
+	val options = labmdaTest()
+
+	fun labmdaTest(): ChromeOptions{
+		val option = ChromeOptions()
+		option.setPlatformName("Windows 10")
+		option.setCapability("browserVersion", "110.0")
+		val ltOptions: HashMap<String, Any> = HashMap<String, Any>()
+		ltOptions["username"] = username
+		ltOptions["accessKey"] = accessToken
+		ltOptions["project"] = "Untitled"
+		ltOptions["selenium_version"] = "4.0.0"
+		ltOptions["w3c"] = true
+		option.setCapability("LT:Options", ltOptions)
+		return option
+	}
+
+
+//	val options = optionSetUp()
 //	fun optionsSetUp(): ChromeOptions {
 //		val options = ChromeOptions().addArguments("--remote-allow-origins=*")
 //		options.setCapability("browserName", "chrome")
