@@ -13,7 +13,6 @@ import org.openqa.selenium.Keys
 import org.openqa.selenium.OutputType.BYTES
 import org.openqa.selenium.TakesScreenshot
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.support.events.EventFiringDecorator
@@ -21,6 +20,10 @@ import org.openqa.selenium.support.events.WebDriverListener
 
 
 class SeleniumTests {
+
+	val username = "Your user name"
+	val accessToken = "Your password"
+	val host = URL("https://${username}:${accessToken}@hub.lambdatest.com/wd/hub")!!
 
 	val options = optionSetUp()
 //	fun optionsSetUp(): ChromeOptions {
@@ -52,7 +55,7 @@ class SeleniumTests {
 		}
 	}
 
-	val driver = EventFiringDecorator<WebDriver>(listener).decorate(RemoteWebDriver(URL("http://localhost:4444/wd/hub")!!, options))
+	val driver = EventFiringDecorator<WebDriver>(listener).decorate(RemoteWebDriver(host, options))
 	//val driver = EventFiringDecorator<WebDriver>(listener).decorate(ChromeDriver(chromeOptions))
 
 	@Before
