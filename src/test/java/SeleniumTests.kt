@@ -3,10 +3,9 @@ import java.lang.Thread.sleep
 import java.net.URL
 import java.nio.file.Files.write
 import java.util.concurrent.TimeUnit
-import org.junit.After
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 import org.openqa.selenium.Alert
 import org.openqa.selenium.By
 import org.openqa.selenium.Keys
@@ -17,6 +16,7 @@ import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.support.events.EventFiringDecorator
 import org.openqa.selenium.support.events.WebDriverListener
+import org.hamcrest.MatcherAssert.assertThat
 
 
 class SeleniumTests {
@@ -75,7 +75,7 @@ class SeleniumTests {
 	val driver = EventFiringDecorator<WebDriver>(listener).decorate(RemoteWebDriver(host, options))
 	//val driver = EventFiringDecorator<WebDriver>(listener).decorate(ChromeDriver(chromeOptions))
 
-	@Before
+	@BeforeAll
 	fun setUp() {
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
 	}
@@ -98,7 +98,7 @@ class SeleniumTests {
 		alert.accept()
 		demoPage.captchaInput.sendKeys(demoPage.calculateCaptcha().toString())
 		demoPage.submitButton.click()
-		Assert.assertTrue("Completed sign is present", demoPage.completedCheckmark.size > 0)
+		assertThat("Completed sign is present", demoPage.completedCheckmark.size > 0)
 		driver.findElement(By.cssSelector("body")).sendKeys(Keys.chord(Keys.COMMAND, "A"))
 		val file = (driver as TakesScreenshot).getScreenshotAs(BYTES)
 		val screenshotFile = File("screenshot.png")
@@ -110,18 +110,18 @@ class SeleniumTests {
 		driver.navigate().to("https://phptravels.com/demo")
 		val demoPage = DemoPage(driver)
 		demoPage.submitForm()
-		Assert.assertTrue("Completed sign is present", demoPage.completedCheckmark.size > 0)
+		assertThat("Completed sign is present", demoPage.completedCheckmark.size > 0)
 	}
 
 	@Test
 	fun tableInteraction() {
 		driver.navigate().to("https://www.techlistic.com/p/demo-selenium-practice.html")
 		val tablePage = TablePage(driver)
-		Assert.assertTrue("Taipei" == tablePage.dynamicElement("Taipei 101", "City")?.text)
+		assertThat("Table contains propper value","Taipei" == tablePage.dynamicElement("Taipei 101", "City")?.text)
 		sleep(1000)
 	}
 
-	@After
+	@AfterAll
 	fun tearDown() {
 		driver.quit()
 	}
